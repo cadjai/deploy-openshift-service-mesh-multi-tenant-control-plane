@@ -35,7 +35,7 @@ The primary assets contained within this repository is a Helm Chart to deploy th
 
 ### SCMP multi tenant deployment Architecture 
 
-![](images/scmp-multi-tenant-architecture.png)
+![](images/ossm-scmp-multi-tenant-architecture.png)
 
 ## Installation and Deployment
 
