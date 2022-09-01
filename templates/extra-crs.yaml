@@ -1,0 +1,130 @@
+{{- if eq .Values.isproduction true -}}
+{{- $namespace := include "ossm-smcp.namespace" . -}}
+{{- $fullName := include "ossm-smcp.fullname" . -}}
+---
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+{{- if .Values.jaeger.crname }}
+  name: {{ .Values.jaeger.crname }}
+{{- end }}
+spec:
+{{- if and .Values.jaeger.crname (contains "production" .Values.jaeger.strategy) }}
+  strategy: {{ .Values.jaeger.strategy }}
+{{- end }}
+  collector:
+    maxReplicas: 5
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  storage:
+    type: elasticsearch
+    # options: External elastic configuration
+    #   es:
+    #     server-urls: https://elastic.default.svc:9200
+    #     index-prefix: my-prefix
+    #     tls:
+    #       ca: /es/certificates/ca.crt
+    # secretName: jaeger-secret
+    elasticsearch:
+      storage:
+        storageClassName: gp2
+        size: 10Gi
+      nodeCount: 3
+      resources:
+        requests:
+          cpu: 1
+          memory: 16Gi
+        limits:
+          memory: 16Gi
+      redundancyPolicy: MultipleRedundancy
+    esIndexCleaner:
+      enabled: true            # turn the cron job deployment on and off
+      numberOfDays: 60         # number of days to wait before deleting a record
+      schedule: "55 23 * * *"  # cron expression for it to run
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istio-federation
+  namespace: {{ $namespace }} 
+  labels:
+    maistra-control-plane: {{ $namespace }} 
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  endpoints:
+  - interval: 30s
+    scrapeTimeout: 30s
+    params:
+      'match[]':
+      - '{job="pilot"}'
+      - '{job="envoy-stats"}'
+    path: /federate
+    targetPort: 9090
+    honorLabels: true
+    metricRelabelings:
+    - sourceLabels: ["__name__"]
+      regex: 'workload:(.*)'
+      targetLabel: "__name__"
+      action: replace
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: istio-metrics-aggregation
+  labels:
+    maistra-control-plane: {{ $namespace }}
+spec:
+  groups:
+  - name: "istio.metricsAggregation-rules"
+    interval: 5s
+    rules:
+    - record: "workload:istio_requests_total"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_requests_total)"
+
+    - record: "workload:istio_request_duration_milliseconds_count"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_duration_milliseconds_count)"
+    - record: "workload:istio_request_duration_milliseconds_sum"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_duration_milliseconds_sum)"
+    - record: "workload:istio_request_duration_milliseconds_bucket"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_duration_milliseconds_bucket)"
+
+    - record: "workload:istio_request_bytes_count"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_bytes_count)"
+    - record: "workload:istio_request_bytes_sum"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_bytes_sum)"
+    - record: "workload:istio_request_bytes_bucket"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_request_bytes_bucket)"
+
+    - record: "workload:istio_response_bytes_count"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_response_bytes_count)"
+    - record: "workload:istio_response_bytes_sum"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_response_bytes_sum)"
+    - record: "workload:istio_response_bytes_bucket"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_response_bytes_bucket)"
+
+    - record: "workload:istio_tcp_connections_opened_total"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_connections_opened_total)"
+    - record: "workload:istio_tcp_connections_closed_total"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_connections_closed_total)"
+
+    - record: "workload:istio_tcp_sent_bytes_total_count"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_sent_bytes_total_count)"
+    - record: "workload:istio_tcp_sent_bytes_total_sum"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_sent_bytes_total_sum)"
+    - record: "workload:istio_tcp_sent_bytes_total_bucket"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_sent_bytes_total_bucket)"
+
+    - record: "workload:istio_tcp_received_bytes_total_count"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_received_bytes_total_count)"
+    - record: "workload:istio_tcp_received_bytes_total_sum"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_received_bytes_total_sum)"
+    - record: "workload:istio_tcp_received_bytes_total_bucket"
+      expr: "sum without(instance, kubernetes_namespace, kubernetes_pod_name) (istio_tcp_received_bytes_total_bucket)"
+
+{{- end }}

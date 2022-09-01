@@ -1,0 +1,168 @@
+{{- $namespace := include "ossm-smcp.namespace" . -}}
+{{- $fullName := include "ossm-smcp.fullname" . -}}
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: {{ $fullName }} 
+  namespace: {{ $namespace }}
+spec:
+  addons:
+    grafana:
+      enabled: true
+    prometheus:
+      enabled: true
+      install:
+        retention: 2h # for federated setup
+    kiali:
+      enabled: true
+    jaeger:
+      {{- if .Values.jaeger.crname }}
+      name:  {{ .Values.jaeger.crname }}# name of Jaeger CR
+      {{- end }}
+      install:
+        storage:
+      {{- if .Values.jaeger.crname }}
+          type: Elasticsearch
+      {{- else }}
+          type: Memory 
+      {{- end }}
+        ingress:
+          enabled: true
+  version: v2.0
+  gateways:
+    egress:
+      enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: true
+            maxReplicas: 4
+            minReplicas: 2
+            targetCPUUtilizationPercentage: 60
+          replicas: 2
+      service:
+        ports:
+        - port: 15020
+          targetPort: 15020
+          name: status-port
+        - port: 80
+          targetPort: 8080
+          name: http2
+        - port: 443
+          targetPort: 8443
+          name: https
+    ingress:
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: true
+            maxReplicas: 4
+            minReplicas: 2
+            targetCPUUtilizationPercentage: 60
+          replicas: 2
+      service:
+        ports:
+        - port: 15020
+          targetPort: 15020
+          name: status-port
+        - port: 80
+          targetPort: 8080
+          name: http2
+        - port: 443
+          targetPort: 8443
+          name: https
+    additionalIngress:
+      {{- if .Values.gateways.additionalIngresses }}
+      {{- range .Values.gateways.additionalIngresses }}
+      {{- $ingressname := print .namespace  "-ingress" -}}
+      {{ $ingressname }}
+      enabled: true
+      namespace: {{ $ingressname }} 
+      service:
+        ports:
+          - name: status-port
+            port: 15020
+          - name: http2
+            port: 80
+            targetPort: 8080
+          - name: https
+            port: 443
+            targetPort: 8443
+        type: ClusterIP
+        {{- end }}
+      {{- end }}
+    additionalEgress:
+      {{- if .Values.gateways.additionalEgresses }}
+      {{- range .Values.gateways.additionalEgresses }}
+      {{- $egressname := print .namespace  "-egress" -}}
+      {{ $egressname }}
+      enabled: true
+      namespace: {{ $egressname }} 
+      service:
+        ports:
+          - name: status-port
+            port: 15020
+          - name: http2
+            port: 80
+            targetPort: 8080
+          - name: https
+            port: 443
+            targetPort: 8443
+        type: ClusterIP
+        {{- end }}
+      {{- end }}
+  security:
+    certificateAuthority:
+      istiod:
+        type: PrivateKey
+    dataPlane:
+      mtls: true
+  policy:
+    type: Istiod
+  profiles:
+    {{- if .Values.profiles }}
+    {{- range .Values.profiles }}
+    {{- else }}
+    - default
+    {{- end }}
+    {{- end }}
+  telemetry:
+    type: Istiod
+  tracing:
+    sampling: 1000
+    type: Jaeger
+  runtime:
+    components:
+      grafana:
+        deployment:
+          autoScaling:
+            enabled: true
+            maxReplicas: 3
+            minReplicas: 2
+            targetCPUUtilizationPercentage: 60
+          replicas: 2
+        container:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 256Mi
+      prometheus:
+        container:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 306Mi
+      kiali:
+        deployment:
+          autoScaling:
+            enabled: true
+            maxReplicas: 3
+            minReplicas: 2
+            targetCPUUtilizationPercentage: 60
+          replicas: 2
+        container:
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+

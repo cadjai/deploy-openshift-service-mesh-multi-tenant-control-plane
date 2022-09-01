@@ -1,0 +1,74 @@
+# Default values for ossm-smcp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+isproduction: false
+
+namespace:
+  # Specifies whether the scmp namespace should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the namespace to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # The name of the namespace to use.
+  # If not set and create is true, a name is generated using the fullname template
+  # Specifies whether a suffix should be appended to the scmp namespace to be created or not
+  useSuffix: false
+  # The name of the namespace suffix to use.
+  # If not set and usesuffix to false
+  suffix: "-scmp"
+
+testnamespace:
+  # Specifies whether the scmp test namespace should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the test namespace to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+  # The name of the test namespace to use.
+  # If not set and create is true, a name is generated using the fullname template
+  # Specifies whether a suffix should be appended to the scmp namespace to be created or not
+  useSuffix: true
+  # The name of the namespace suffix to use.
+  # If not set and usesuffix to false
+  suffix: "-scmp-test"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+members: []
+# List of member projects that will be part of this mesh
+
+profiles: []
+# List of profile to be this OSSM control plane configuration on
+
+gateways:
+  ingress:
+    maxReplicas: 4
+    minReplicas: 2
+    replicas: 2
+  egress:
+    maxReplicas: 4
+    minReplicas: 2
+    replicas: 2
+  additionalIngresses: []
+  #  - namespace:
+
+  additionalEgresses: []
+  #  - namespace:
+
+jaeger:
+  # the name of Custom Resource to use the configure jaeger if there is one.
+  crname:
+  # specifies wether to use a production strategy or not
+  strategy:
+
