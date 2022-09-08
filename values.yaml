@@ -6,7 +6,8 @@ isproduction: false
 
 namespace:
   # Specifies whether the scmp namespace should be created
-  create: true
+  create: false
+  deploy: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the namespace to use.
@@ -18,11 +19,12 @@ namespace:
   useSuffix: false
   # The name of the namespace suffix to use.
   # If not set and usesuffix to false
-  suffix: "-scmp"
+  suffix: "-smcp"
 
 testnamespace:
   # Specifies whether the scmp test namespace should be created
   create: false
+  deploy: false
   # Annotations to add to the service account
   annotations: {}
   # The name of the test namespace to use.

@@ -1,3 +1,4 @@
+{{- if eq .Values.testnamespace.deploy true -}}
 {{- $namespace := include "ossm-smcp.testnamespace" . -}}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
@@ -42,3 +43,5 @@ spec:
         host: productpage
         port:
           number: 9080
+
+{{- end }}

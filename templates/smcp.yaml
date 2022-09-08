@@ -1,3 +1,4 @@
+{{- if eq .Values.namespace.deploy true -}}
 {{- $namespace := include "ossm-smcp.namespace" . -}}
 {{- $fullName := include "ossm-smcp.fullname" . -}}
 apiVersion: maistra.io/v2
@@ -166,3 +167,4 @@ spec:
               cpu: 100m
               memory: 128Mi
 
+{{- end }}

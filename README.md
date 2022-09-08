@@ -60,7 +60,13 @@ $ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-nam
   2. without target namespace creation
 
 ```
-$ helm install main ./ -f values.yaml --debug --namespace main-scmp
+$ helm install main ./ -f values.yaml --debug --namespace main-scmp --wait
+```
+
+  3. if this is the first time an smcp is being deployed you might need to set the deploy flag to false for the testnamespace so that the sample app is not deployed. Otherwise you might see `unable to recognize "": no matches for kind "Gateway" in version "networking.istio.io/v1alpha3", unable to recognize "": no matches for kind "VirtualService" in version "networking.istio.io/v1alpha3"` error which indicates that the required CRDs are not present yet. This is due to a race condition where the deployment of the sample app seems to preceed the smcp deployment
+
+```
+$ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-namespace --wait
 ```
 
 5. Verify that you can view the deployed manifests in the target namespace

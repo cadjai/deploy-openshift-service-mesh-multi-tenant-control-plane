@@ -1,3 +1,4 @@
+{{- if eq .Values.testnamespace.deploy true -}}
 {{- $namespace := include "ossm-smcp.testnamespace" . -}}
 # Copyright Istio Authors
 #
@@ -355,4 +356,6 @@ spec:
       volumes:
       - name: tmp
         emptyDir: {}
+
+{{- end }}
 ---
