@@ -1,7 +1,7 @@
 OpenShift Service Mesh Multi tenant Control Plane Deployment
 ==================================
 
-This repository contains assets to enable a multi tenant deployment of the OpenShift Service Mesh control plane (ServiceMeshControlPlane and associated ServiceMeshMemberRoll) as well as any related services on an OpenShift Container Platform 4.9+. The ServiceMeshControlPlane (scmp) and the ServiceMeshMemberRoll (smmr) have to both be deployed to the same namespace.
+This repository contains assets to enable a multi tenant deployment of the OpenShift Service Mesh control plane (ServiceMeshControlPlane and associated ServiceMeshMemberRoll) as well as any related services on an OpenShift Container Platform 4.9+. The ServiceMeshControlPlane (smcp) and the ServiceMeshMemberRoll (smmr) have to both be deployed to the same namespace.
 
 ## Overview
 
@@ -23,11 +23,11 @@ The following prerequisites must be satisfied prior to deploying this applicatio
   * [Helm](https://helm.s/)
   * [OpenSSL](https://www.openssl.org) (Optional)
 
-* Due to the namespace creation limitation of Helm 3.x for the time being it is recommneded that the namespace used for the scmp deployment and text application be created before hands or at the very minimum have the test namespace created and use the appropriate command option of helm to create the target scmp namespace
+* Due to the namespace creation limitation of Helm 3.x for the time being it is recommneded that the namespace used for the smcp deployment and text application be created before hands or at the very minimum have the test namespace created and use the appropriate command option of helm to create the target smcp namespace
   
 ## Components
 
-The primary assets contained within this repository is a Helm Chart to deploy the ServiceMeshControlPlane (represented by the scmp.yaml) and the ServiceMeshMemberRoll (represented by the smmr.yaml). In addition, there are a few optional custom resources (represented by the extra-crs.yaml) that can also be deployed and configured alongside the control plane.  Please refer to the [values.yaml](values.yaml) file for values that can be used to customize and control the installation. 
+The primary assets contained within this repository is a Helm Chart to deploy the ServiceMeshControlPlane (represented by the smcp.yaml) and the ServiceMeshMemberRoll (represented by the smmr.yaml). In addition, there are a few optional custom resources (represented by the extra-crs.yaml) that can also be deployed and configured alongside the control plane.  Please refer to the [values.yaml](values.yaml) file for values that can be used to customize and control the installation. 
 
 ### OSSM Architecture 
 
@@ -35,7 +35,7 @@ The primary assets contained within this repository is a Helm Chart to deploy th
 
 ### SCMP multi tenant deployment Architecture 
 
-![](images/ossm-scmp-multi-tenant-architecture.png)
+![](images/ossm-smcp-multi-tenant-architecture.png)
 
 ## Installation and Deployment
 
@@ -43,37 +43,37 @@ With all of the prerequisites met and an overview of the components provided in 
 
 1. Clone the repository and change directory into the base directory
 ```
-$ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant-control-plane.git && cd deploy-ossm-multi-tenant-scmp 
+$ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant-control-plane.git && cd deploy-ossm-multi-tenant-smcp 
 ```
 
 2. Login to OpenShift with a user with `cluster-admin` permissions
 
-3. Customize your scmp values.yml file if necessary or use the helm command line options in the next command
+3. Customize your smcp values.yml file if necessary or use the helm command line options in the next command
   * Ensure you set the testnamespace.deploy to false to avoid the sample app being deployed before the mesh is ready
  
-4. Deploy scmp 
+4. Deploy smcp 
   * with target namespace creation
 
      ```
-     $ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-namespace --wait
+     $ helm install main ./ -f values.yaml --debug --namespace main-smcp --create-namespace --wait
      ```
 
   * without target namespace creation (pre-existing namespace)
 
      ```
-     $ helm install main ./ -f values.yaml --debug --namespace main-scmp --wait
+     $ helm install main ./ -f values.yaml --debug --namespace main-smcp --wait
      ```
 
 5. Verify that you can view the deployed manifests in the target namespace
 
-   * Navigate to the target namespace within the OpenShift console and verify that the scmp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the scmp if needed.
+   * Navigate to the target namespace within the OpenShift console and verify that the smcp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the smcp if needed.
 
 6. Deploy OSSM sample app for testing 
-  * Update your scmp values.yml file by setting the testnamespace.deploy to true 
+  * Update your smcp values.yml file by setting the testnamespace.deploy to true 
 
   * Change context into the project within with the smcp was deployed above using the oc command
      ```
-     oc project main-scmp
+     oc project main-smcp
      ```
 
   * Deploy the sample application 

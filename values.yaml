@@ -5,21 +5,21 @@
 isproduction: false
 
 namespace:
-  # Specifies whether the scmp should be deployed into the specified namespace or npt
+  # Specifies whether the smcp should be deployed into the specified namespace or npt
   deploy: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the namespace to use.
   # If not set , a name is generated using the fullname template
   name: ""
-  # Specifies whether a suffix should be appended to the scmp namespace to be created or not
+  # Specifies whether a suffix should be appended to the smcp namespace to be created or not
   useSuffix: false
   # The name of the namespace suffix to use.
   # If not set and usesuffix to false
   suffix: "-smcp"
 
 testnamespace:
-  # Specifies whether the scmp test namespace should be deployed
+  # Specifies whether the smcp test namespace should be deployed
   deploy: false
   # Annotations to add to the service account
   annotations: {}
@@ -28,11 +28,11 @@ testnamespace:
   name: ""
   # The name of the test namespace to use.
   # If not set , a name is generated using the fullname template
-  # Specifies whether a suffix should be appended to the scmp namespace to be created or not
+  # Specifies whether a suffix should be appended to the smcp namespace to be created or not
   useSuffix: true
   # The name of the namespace suffix to use.
   # If not set and usesuffix to false
-  suffix: "-scmp-test"
+  suffix: "-smcp-test"
 
 serviceAccount:
   # Specifies whether a service account should be created
