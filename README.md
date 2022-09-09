@@ -33,7 +33,7 @@ The primary assets contained within this repository is a Helm Chart to deploy th
 
 ![](images/ossm-architecture.png)
 
-### SCMP multi tenant deployment Architecture 
+### SMCP multi tenant deployment Architecture 
 
 ![](images/ossm-smcp-multi-tenant-architecture.png)
 
