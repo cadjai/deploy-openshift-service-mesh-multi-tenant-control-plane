@@ -49,6 +49,7 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
 2. Login to OpenShift with a user with `cluster-admin` permissions
 
 3. Customize your scmp values.yml file if necessary or use the helm command line options in the next command
+  1. Ensure you set the testnamespace.deploy to false to avoid the sample app being deployed before the mesh is ready
  
 4. Deploy scmp 
   1. with target namespace creation
@@ -57,7 +58,7 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
 $ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-namespace --wait
 ```
 
-  2. without target namespace creation
+  2. without target namespace creation (pre-existing namespace)
 
 ```
 $ helm install main ./ -f values.yaml --debug --namespace main-scmp --wait
@@ -74,6 +75,39 @@ $ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-nam
    1. Navigate to the target namespace within the OpenShift console and verify that the scmp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the scmp if needed.
 
 
-   2. Navigate to the test application namespace to verify that it came up and follow steps documented in [ossm sample application](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/prepare-to-deploy-applications-ossm.html#ossm-tutorial-bookinfo-overview_ossm-create-mesh) for more information on accessing the application. 
+6. Deploy OSSM sample app for testing 
+  1. Update your scmp values.yml file by setting the testnamespace.deploy to true 
 
+  2. Change context into the project within with the smcp was deployed above using the oc command
+```
+oc project main-scmp
+```
 
+  3. Deploy the sample application 
+     1. with target namespace creation
+
+```
+$ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
+```
+
+     2. without target namespace creation (pre-existing namespace)
+
+```
+$ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --wait
+```
+
+7. Verify that you can view the deployed sample app in the target namespace
+
+   1. Navigate to the test application namespace to verify that it came up and follow steps documented in [ossm sample application](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/prepare-to-deploy-applications-ossm.html#ossm-tutorial-bookinfo-overview_ossm-create-mesh) for more information on accessing the application. 
+
+   2. Check that you can connect to the sample app using curl
+```
+export GATEWAY_URL=$(oc -n main-smcp get route istio-ingressgateway -o jsonpath='{.spec.host}')
+echo $GATEWAY_URL
+curl -I http://$GATEWAY_URL/productpage 
+```
+
+7. If further integration are needed proceed to that. 
+   1. The ingress gateway can be configured to use RH SSO as an oauth2-proxy. For mor information check the [original repo](https://github.com/ghurel-rh/servicemesh-2-rhsso-examples.git) or [my forked updated version of the same repo](https://github.com/cadjai/servicemesh-2-rhsso-examples.git).
+
+   2. The ingress gateway can also be configured to use the OpenShift oauth server as an oauth-proxy. For mor information check the [oauth-proxy branch of the repo](https://github.com/cadjai/servicemesh-2-rhsso-examples.git).
