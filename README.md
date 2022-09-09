@@ -37,6 +37,11 @@ The primary assets contained within this repository is a Helm Chart to deploy th
 
 ![](images/ossm-smcp-multi-tenant-architecture.png)
 
+### SMCP multi tenant Data Flow 
+
+![](images/ossm-smcp-multi-tenant-data-flow.png)
+
+
 ## Installation and Deployment
 
 With all of the prerequisites met and an overview of the components provided in this repository, execute the following commands to deploy the solution:
