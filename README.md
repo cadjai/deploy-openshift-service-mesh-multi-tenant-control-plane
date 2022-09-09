@@ -64,16 +64,9 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      $ helm install main ./ -f values.yaml --debug --namespace main-scmp --wait
      ```
 
-  * if this is the first time an smcp is being deployed you might need to set the deploy flag to false for the testnamespace so that the sample app is not deployed. Otherwise you might see `unable to recognize "": no matches for kind "Gateway" in version "networking.istio.io/v1alpha3", unable to recognize "": no matches for kind "VirtualService" in version "networking.istio.io/v1alpha3"` error which indicates that the required CRDs are not present yet. This is due to a race condition where the deployment of the sample app seems to preceed the smcp deployment.  
-
-     ```
-     $ helm install main ./ -f values.yaml --debug --namespace main-scmp --create-namespace --wait
-     ```
-
 5. Verify that you can view the deployed manifests in the target namespace
 
    * Navigate to the target namespace within the OpenShift console and verify that the scmp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the scmp if needed.
-
 
 6. Deploy OSSM sample app for testing 
   * Update your scmp values.yml file by setting the testnamespace.deploy to true 
