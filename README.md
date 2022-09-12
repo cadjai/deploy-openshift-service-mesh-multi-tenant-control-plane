@@ -105,7 +105,8 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
       curl -I http://$GATEWAY_URL/productpage 
       ```
 
-8. If further integration are needed proceed to that. 
+8. If further integration is needed proceed with that. 
+As an example of integration, you can integrate the Ingress gateway with various authentication and authorization flows. A common use case is to integrate the ingress gateway with a oauth-proxy. Below are a couple of examples of using oauth-proxy and oauth2-proxy with the OSSM ingress gateway. 
    * The ingress gateway can be configured to use RH SSO as an oauth2-proxy. For mor information check the [original repo](https://github.com/ghurel-rh/servicemesh-2-rhsso-examples.git) or [my forked updated version of the same repo](https://github.com/cadjai/servicemesh-2-rhsso-examples.git).
 
    * The ingress gateway can also be configured to use the OpenShift oauth server as an oauth-proxy. For mor information check the [oauth-proxy branch of the repo](https://github.com/cadjai/servicemesh-2-rhsso-examples/tree/ocp-oauth-proxy).
