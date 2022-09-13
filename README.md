@@ -62,7 +62,7 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      ```
      $ helm install main ./ -f values.yaml --debug --namespace main-smcp --wait
      ```
-  * with target namespace creation
+  * with target namespace creation (not recommended but can be done)
 
      ```
      $ helm install main ./ -f values.yaml --debug --namespace main-smcp --create-namespace --wait
@@ -72,7 +72,7 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
 
    * Navigate to the target namespace within the OpenShift console and verify that the smcp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the smcp if needed.
 
-6. Deploy OSSM sample app for testing (in case it was not deployed with the smcp above) 
+6. Deploy OSSM sample app for testing  
   * Update your smcp values.yml file by setting the testnamespace.deploy to true 
 
   * Change context into the project within with the smcp was deployed above using the oc command
@@ -85,9 +85,9 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      * without target namespace creation (pre-existing namespace)
 
       ```
-      $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --wait
+      $ helm upgrade --install main ./ -f values.yaml --debug --namespace main-default-bf --wait
       ```
-     * with target namespace creation
+     * with target namespace creation (not recommended but can be done)
 
       ```
       $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
