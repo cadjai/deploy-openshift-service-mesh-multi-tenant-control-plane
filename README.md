@@ -57,23 +57,22 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
   * Ensure you set the testnamespace.deploy to false to avoid the sample app being deployed before the mesh is ready
  
 4. Deploy smcp 
+  * without target namespace creation (pre-existing namespace)
+
+     ```
+     $ helm install main ./ -f values.yaml --debug --namespace main-smcp --wait
+     ```
   * with target namespace creation
 
      ```
      $ helm install main ./ -f values.yaml --debug --namespace main-smcp --create-namespace --wait
      ```
 
-  * without target namespace creation (pre-existing namespace)
-
-     ```
-     $ helm install main ./ -f values.yaml --debug --namespace main-smcp --wait
-     ```
-
 5. Verify that you can view the deployed manifests in the target namespace
 
    * Navigate to the target namespace within the OpenShift console and verify that the smcp and smmr are deployed and review that the related workload is up. see [ossm installation guide](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/ossm-create-smcp.html) for more information on how to further customize the smcp if needed.
 
-6. Deploy OSSM sample app for testing 
+6. Deploy OSSM sample app for testing (in case it was not deployed with the smcp above) 
   * Update your smcp values.yml file by setting the testnamespace.deploy to true 
 
   * Change context into the project within with the smcp was deployed above using the oc command
@@ -82,16 +81,16 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      ```
 
   * Deploy the sample application 
-     * with target namespace creation
-
-      ```
-      $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
-      ```
       
      * without target namespace creation (pre-existing namespace)
 
       ```
       $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --wait
+      ```
+     * with target namespace creation
+
+      ```
+      $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
       ```
       
 7. Verify that you can view the deployed sample app in the target namespace
