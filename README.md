@@ -67,6 +67,11 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      ```
      $ helm install main ./ -f values.yaml --debug --namespace main-smcp --create-namespace --wait
      ```
+  * with target namespace creation and override of optional components values
+     ```
+     $ helm install main ./ -f values.yaml  --set testnamespace.name=main-default-bf  --set  jaeger.deploy=false --set  kiali.deploy=false --debug --namespace main-smcp --create-namespace --wait
+ 
+     ```
 
 5. Verify that you can view the deployed manifests in the target namespace
 
@@ -90,9 +95,14 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      * with target namespace creation (not recommended but can be done)
 
       ```
-      $ helm upgrade main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
+      $ helm upgrade --install main ./ -f values.yaml --debug --namespace main-default-bf --create-namespace --wait
       ```
       
+     * with target namespace creation and override of optional components values
+     ```
+     $ helm upgrade --install main ./ -f values.yaml --set testnamespace.deploy=true  --set namespace.deploy=false --debug --namespace main-default-bf --create-namespace --wait 
+ 
+     ```
 7. Verify that you can view the deployed sample app in the target namespace
 
    * Navigate to the test application namespace to verify that it came up and follow steps documented in [ossm sample application](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/prepare-to-deploy-applications-ossm.html#ossm-tutorial-bookinfo-overview_ossm-create-mesh) for more information on accessing the application. 
