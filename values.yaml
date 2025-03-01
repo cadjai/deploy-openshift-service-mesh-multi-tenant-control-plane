@@ -56,8 +56,13 @@ gateways:
   #  - namespace:
 
 jaeger:
+  # specifies whether to configure the jaeger CR or not 
+  config: false
   # the name of Custom Resource to use the configure jaeger if there is one.
   crname:
   # specifies wether to use a production strategy or not
   strategy:
 
+kiali:
+  # specifies whether to configure the kiali CR or not 
+  config: false
