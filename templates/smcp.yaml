@@ -14,8 +14,14 @@ spec:
       enabled: true
       install:
         retention: 2h # for federated setup
+{{- if eq .Values.kiali.deploy true -}}
     kiali:
       enabled: true
+{{- else }}
+    kiali:
+      enabled: false
+{{- end }}
+{{- if eq .Values.jaeger.deploy true -}}
     jaeger:
       {{- if .Values.jaeger.crname }}
       name:  {{ .Values.jaeger.crname }}# name of Jaeger CR
@@ -29,7 +35,15 @@ spec:
       {{- end }}
         ingress:
           enabled: true
-  version: v2.0
+{{- end }}
+  version: v2.6
+  mode: MultiTenant
+  policy:
+    type: Istiod
+  profiles:
+    - default
+  telemetry:
+    type: Istiod
   gateways:
     egress:
       enabled: true
@@ -129,9 +143,14 @@ spec:
     {{- end }}
   telemetry:
     type: Istiod
+{{- if eq .Values.jaeger.deploy true -}}
   tracing:
     sampling: 1000
     type: Jaeger
+{{- else }}
+  tracing:
+    type: None
+{{- end }}
   runtime:
     components:
       grafana:
@@ -153,6 +172,7 @@ spec:
             requests:
               cpu: 10m
               memory: 306Mi
+{{- if eq .Values.kiali.deploy true -}}
       kiali:
         deployment:
           autoScaling:
@@ -166,5 +186,6 @@ spec:
             requests:
               cpu: 100m
               memory: 128Mi
+{{- end }}
 
 {{- end }}
