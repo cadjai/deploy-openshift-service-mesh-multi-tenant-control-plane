@@ -66,3 +66,12 @@ jaeger:
 kiali:
   # specifies whether to configure the kiali CR or not 
   config: false
+
+# specifies whethere to run all on components on infra nodes or run specifed components on infra nodes
+runOnInfra:
+  all:
+    run: true
+    infraId: 'infra'
+    infraLabel: 'infra'
+    infraTaint: 'reserved'
+  components: []
