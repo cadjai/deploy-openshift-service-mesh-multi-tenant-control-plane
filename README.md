@@ -103,6 +103,11 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
      $ helm upgrade --install main ./ -f values.yaml --set testnamespace.deploy=true  --set namespace.deploy=false --debug --namespace main-default-bf --create-namespace --wait 
  
      ```
+     * with target namespace creation and override of optional components values and test app deploy
+     ```
+     $ helm install main ./ -f values.yaml -set fullnameOverride=ossm-smcp --set testnamespace.deploy=true --set testnamespace.name=main-default-bf --set namespace.deploy=false --set jaeger.deploy=false --set kiali.deploy=false --debug --namespace main-default-smcp --create-namespace --wait 
+ 
+     ```
 7. Verify that you can view the deployed sample app in the target namespace
 
    * Navigate to the test application namespace to verify that it came up and follow steps documented in [ossm sample application](https://docs.openshift.com/container-platform/4.11/service_mesh/v2x/prepare-to-deploy-applications-ossm.html#ossm-tutorial-bookinfo-overview_ossm-create-mesh) for more information on accessing the application. 
@@ -112,6 +117,7 @@ $ git clone https://github.com/cadjai/deploy-openshift-service-mesh-multi-tenant
       export GATEWAY_URL=$(oc -n main-smcp get route istio-ingressgateway -o jsonpath='{.spec.host}')
       echo $GATEWAY_URL
       curl -I http://$GATEWAY_URL/productpage 
+      curl -sS http://$GATEWAY_URL/productpage | grep -o "<title>.*</title>"
       ```
 
 8. If further integration is needed proceed with that. 
@@ -119,3 +125,6 @@ As an example of integration, you can integrate the Ingress gateway with various
    * The ingress gateway can be configured to use RH SSO as an oauth2-proxy. For mor information check the [original repo](https://github.com/ghurel-rh/servicemesh-2-rhsso-examples.git) or [my forked updated version of the same repo](https://github.com/cadjai/servicemesh-2-rhsso-examples.git).
 
    * The ingress gateway can also be configured to use the OpenShift oauth server as an oauth-proxy. For mor information check the [oauth-proxy branch of the repo](https://github.com/cadjai/servicemesh-2-rhsso-examples/tree/ocp-oauth-proxy/approach_2).
+
+9. If more OSSM objects need to be create for the test application refer to the [original application repo](https://github.com/maistra/istio/tree/maistra-2.6/samples/bookinfo) for more information. 
+For example if you need to test destination rule or any other networking related objects review the networking sub directory. Similarly if you need to deploy gateway api and route object refer to the gateway-api sub directory. 
