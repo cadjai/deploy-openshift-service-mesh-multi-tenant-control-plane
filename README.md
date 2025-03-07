@@ -126,5 +126,5 @@ As an example of integration, you can integrate the Ingress gateway with various
 
    * The ingress gateway can also be configured to use the OpenShift oauth server as an oauth-proxy. For mor information check the [oauth-proxy branch of the repo](https://github.com/cadjai/servicemesh-2-rhsso-examples/tree/ocp-oauth-proxy/approach_2).
 
-9. If more OSSM objects need to be create for the test application refer to the [original application repo](https://github.com/maistra/istio/tree/maistra-2.6/samples/bookinfo) for more information. 
-For example if you need to test destination rule or any other networking related objects review the networking sub directory. Similarly if you need to deploy gateway api and route object refer to the gateway-api sub directory. 
+9. If more OSSM objects need to be created for the test application, refer to the [original application repo](https://github.com/maistra/istio/tree/maistra-2.6/samples/bookinfo) for more information. 
+For example if you need to test destination rules or any other networking related objects, review the networking sub directory. Similarly if you need to deploy gateway api and route objects, refer to the gateway-api sub directory.
