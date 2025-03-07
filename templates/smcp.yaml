@@ -7,6 +7,33 @@ metadata:
   name: {{ $fullName }} 
   namespace: {{ $namespace }}
 spec:
+  version: v2.6
+  mode: MultiTenant
+  security:
+    certificateAuthority:
+      istiod:
+        type: PrivateKey
+    dataPlane:
+{{- if eq .Values.mtlsoff true -}}
+      mtls: false
+{{- else }}
+      mtls: true
+{{- end }}
+  policy:
+    type: Istiod
+{{- if eq .Values.logtostdout true -}}
+  proxy:
+    accessLogging:
+      file:
+        name: /dev/stdout
+{{- end }}
+  profiles:
+    {{- if .Values.profiles }}
+    {{- range .Values.profiles }}
+    {{- else }}
+    - default
+    {{- end }}
+    {{- end }}
   addons:
     grafana:
       enabled: true
@@ -36,14 +63,6 @@ spec:
         ingress:
           enabled: true
 {{- end }}
-  version: v2.6
-  mode: MultiTenant
-  policy:
-    type: Istiod
-  profiles:
-    - default
-  telemetry:
-    type: Istiod
   gateways:
     egress:
       enabled: true
@@ -126,21 +145,6 @@ spec:
         type: ClusterIP
         {{- end }}
       {{- end }}
-  security:
-    certificateAuthority:
-      istiod:
-        type: PrivateKey
-    dataPlane:
-      mtls: true
-  policy:
-    type: Istiod
-  profiles:
-    {{- if .Values.profiles }}
-    {{- range .Values.profiles }}
-    {{- else }}
-    - default
-    {{- end }}
-    {{- end }}
   telemetry:
     type: Istiod
 {{- if eq .Values.jaeger.deploy true -}}

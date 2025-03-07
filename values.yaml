@@ -75,3 +75,27 @@ runOnInfra:
     infraLabel: 'infra'
     infraTaint: 'reserved'
   components: []
+
+bookinfoImages:
+  details:
+    repository: 'quay.io/maistra/examples-bookinfo-details-v1'
+    tag: '2.6.0'
+  productPage:
+    repository: 'quay.io/maistra/examples-bookinfo-productpage-v1'
+    tag: '2.6.0'
+  ratings:
+    repository: 'quay.io/maistra/examples-bookinfo-ratings-v1'
+    tag: '2.6.0'
+  reviewsv1:
+    repository: 'quay.io/maistra/examples-bookinfo-reviews-v1'
+    tag: '2.6.0'
+  reviewsv2:
+    repository: 'quay.io/maistra/examples-bookinfo-reviews-v2'
+    tag: '2.6.0'
+  reviewsv3:
+    repository: 'quay.io/maistra/examples-bookinfo-reviews-v3'
+    tag: '2.6.0'
+
+addSidecarLabel: 'false'
+logtostdout: 'false'
+mtlsoff: 'true'

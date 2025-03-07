@@ -75,11 +75,14 @@ spec:
       labels:
         app: details
         version: v1
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-details
       containers:
       - name: details
-        image: quay.io/maistra/examples-bookinfo-details-v1:2.2.0
+        image: {{ .Values.bookinfoImages.details.repository }}:{{ .Values.bookinfoImages.details.tag }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -131,11 +134,14 @@ spec:
       labels:
         app: ratings
         version: v1
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-ratings
       containers:
       - name: ratings
-        image: quay.io/maistra/examples-bookinfo-ratings-v1:2.2.0
+        image: {{ .Values.bookinfoImages.ratings.repository }}:{{ .Values.bookinfoImages.ratings.tag }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
@@ -187,11 +193,14 @@ spec:
       labels:
         app: reviews
         version: v1
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: quay.io/maistra/examples-bookinfo-reviews-v1:2.2.0
+        image: {{ .Values.bookinfoImages.reviewsv1.repository }}:{{ .Values.bookinfoImages.reviewsv1.tag }}
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -230,11 +239,14 @@ spec:
       labels:
         app: reviews
         version: v2
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: quay.io/maistra/examples-bookinfo-reviews-v2:2.2.0
+        image: {{ .Values.bookinfoImages.reviewsv2.repository }}:{{ .Values.bookinfoImages.reviewsv2.tag }}
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -273,11 +285,14 @@ spec:
       labels:
         app: reviews
         version: v3
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-reviews
       containers:
       - name: reviews
-        image: quay.io/maistra/examples-bookinfo-reviews-v3:2.2.0
+        image: {{ .Values.bookinfoImages.reviewsv3.repository }}:{{ .Values.bookinfoImages.reviewsv3.tag }}
         imagePullPolicy: IfNotPresent
         env:
         - name: LOG_DIR
@@ -342,11 +357,14 @@ spec:
       labels:
         app: productpage
         version: v1
+{{- if eq .Values.addSidecarLabel true -}}
+        sidecar.istio.io/inject: 'true'
+{{- end }}
     spec:
       serviceAccountName: bookinfo-productpage
       containers:
       - name: productpage
-        image: quay.io/maistra/examples-bookinfo-productpage-v1:2.2.0
+        image: {{ .Values.bookinfoImages.productPage.repository }}:{{ .Values.bookinfoImages.productPage.tag }}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9080
